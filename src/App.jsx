@@ -7,6 +7,19 @@ function App (){
     { name: 'Latte', price: 1.0 },
     { name: 'Pasta', price: 0.7 },
   ];
+
+  const [addedProducts, setAddedProducts] = useState([]);                     // Stato locale per i prodotti nel carrello
+   
+  const addToCart = (product) => {                                 // Funzione per aggiungere un prodotto al carrello
+    const isProductInCart = addedProducts.some(product => product.name === product.name); // Controlla se il prodotto è già nel carrello
+    if (isProductInCart) {                                      // Se il prodotto non è già nel carrello
+      return;                                               // ritorna undefined
+    }
+    setAddedProducts(curr => [...curr, {                       // Aggiungi il prodotto al carrello con quantità 1
+      ...product, 
+      quantity: 1
+    }]);
+  };
   return (
     <>
     <h1>Elenco prodotti e prezzi:</h1>
@@ -14,9 +27,21 @@ function App (){
       {products.map((product, index) => (
         <li key={index}>
           <p>{product.name}({product.price.toFixed(2)}$)</p>
+          <button onClick={() => addToCart(product)}>Aggiungi al carrello</button>
         </li>
       ))}
     </ul>
+    {addToCart.length > 0 && (
+      <>
+      <h2>Tuo Carrello:</h2>
+      <ul>
+        {addedProducts.map((product, index) => (
+          <li key={index}>
+            <p>{product.quantity} x {product.name} ({product.price.toFixed(2)}$)</p>
+          </li>
+        ))}
+      </ul>
+      </>)}
     </>
   );
 };
